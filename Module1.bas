@@ -1,4 +1,5 @@
 Attribute VB_Name = "Module1"
+'Â© 2026 ç¥å£è²´èªŒ
 Option Explicit
 
 #If VBA7 Then
@@ -7,16 +8,12 @@ Option Explicit
     Public Declare Function timeGetTime Lib "winmm.dll" () As Long
 #End If
 
-' ‹L˜^æƒV[ƒg‚ğ•Û‚·‚éƒOƒ[ƒoƒ‹•Ï”
 Public TargetSheet As Worksheet
 
-' š è“®‹N“®—pƒ}ƒNƒ
 Sub ShowTimerForm()
-    ' è“®‹N“®‚È‚Ì‚Å IsManual:=TrueAUserName‚Í“n‚³‚È‚¢
     Call LaunchTimerProcess(IsManual:=True)
 End Sub
 
-' ÀÛ‚Ì‹N“®ˆ—iThisWorkbook‚©‚çUserName‚ğó‚¯æ‚è‚Ü‚·j
 Public Sub LaunchTimerProcess(ByVal IsManual As Boolean, Optional ByVal UserName As String = "")
     Dim frm As Object
     Dim b1Value As String
@@ -25,17 +22,13 @@ Public Sub LaunchTimerProcess(ByVal IsManual As Boolean, Optional ByVal UserName
     Dim ws As Worksheet
     Dim foundSheet As Worksheet
     
-    ' Šù‚ÉŠJ‚¢‚Ä‚¢‚éê‡‚ÍA“ñd‹N“®‚µ‚È‚¢‚æ‚¤–³‹‚·‚é
     For Each frm In UserForms
         If frm.Name = "UserForm1" Then Exit Sub
     Next frm
     
-    ' šyd—l•ÏXzè“®‹N“®‚©A©“®‹N“®‚©‚ÅƒV[ƒg‚ÌŒˆ’èƒƒWƒbƒN‚ğ•ªŠò
     If IsManual Then
-        ' è“®‹N“®‚ÍAŒ»İ‚ÌuƒAƒNƒeƒBƒuƒV[ƒgv‚É‹L˜^‚ğŒÅ’è
         Set TargetSheet = ActiveSheet
     Else
-        ' ©“®‹N“®‚ÍA“n‚³‚ê‚½ƒ†[ƒU[–¼‚ªŠÜ‚Ü‚ê‚éƒV[ƒg‚ğŒŸõ
         For Each ws In ThisWorkbook.Worksheets
             If InStr(1, ws.Name, UserName, vbTextCompare) > 0 Then
                 Set foundSheet = ws
@@ -43,7 +36,6 @@ Public Sub LaunchTimerProcess(ByVal IsManual As Boolean, Optional ByVal UserName
             End If
         Next ws
         
-        ' ŠY“–ƒV[ƒg‚ªŒ©‚Â‚©‚ê‚ÎƒAƒNƒeƒBƒu‚É‚µA–³‚¯‚ê‚ÎƒAƒNƒeƒBƒuƒV[ƒg‚É‚·‚é
         If Not foundSheet Is Nothing Then
             Set TargetSheet = foundSheet
             On Error Resume Next
@@ -54,15 +46,12 @@ Public Sub LaunchTimerProcess(ByVal IsManual As Boolean, Optional ByVal UserName
         End If
     End If
     
-    ' “Á’è‚µ‚½TargetSheet‚ÌB1ƒZƒ‹‚ğƒ`ƒFƒbƒN
     b1Value = Trim(TargetSheet.Range("B1").Text)
     
-    ' šyd—l•ÏXz©“®‹N“®AB1ƒZƒ‹‚É‚·‚Å‚Éƒ^ƒCƒ€‚ª“ü—Í‚³‚ê‚Ä‚¢‚½‚ç‹N“®‚µ‚È‚¢
     If Not IsManual And b1Value Like "##:##:##.###" Then
         Exit Sub
     End If
     
-    ' ‰Šú’l‚Ìİ’èiB1‚É³‚µ‚¢Œ`®‚ª‚ ‚ê‚Î‚»‚ê‚ğˆø‚«Œp‚¬A–³‚¯‚ê‚Î0ƒŠƒZƒbƒgj
     If b1Value Like "##:##:##.###" Then
         initMs = ParseToMillisec(b1Value)
         initText = b1Value
@@ -71,20 +60,17 @@ Public Sub LaunchTimerProcess(ByVal IsManual As Boolean, Optional ByVal UserName
         initText = "00:00:00.000"
     End If
     
-    ' ƒ†[ƒU[ƒtƒH[ƒ€‚ğ•\¦
     Load UserForm1
     Call UserForm1.SetInitialTime(initMs, initText)
     UserForm1.Show vbModeless
 End Sub
 
-' ƒ†[ƒU[ƒtƒH[ƒ€‚Ìƒ‹[ƒv‚ğ‹N“®‚·‚é‚½‚ß‚Ì’†Œpƒ}ƒNƒ
 Sub TriggerFormLoop(Optional Dummy As Byte = 0)
     On Error Resume Next
     UserForm1.StartTimer
     On Error GoTo 0
 End Sub
 
-' •¶š—ñ‚ğƒ~ƒŠ•b‚É‹t•ÏŠ·‚·‚éŠÖ”
 Private Function ParseToMillisec(ByVal timeStr As String) As Long
     On Error GoTo ErrorHandler
     Dim parts() As String, timeParts() As String
